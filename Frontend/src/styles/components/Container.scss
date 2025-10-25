@@ -1,0 +1,13 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 0;
+
+  @include respond(laptop) { width: 95%; }
+  @include respond(tablet) { width: 100%; padding: 0.5rem 1rem; }
+  @include respond(mobile) { width: 100%; padding: 0.5rem; }
+}

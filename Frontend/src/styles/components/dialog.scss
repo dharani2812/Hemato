@@ -1,0 +1,102 @@
+@use "../variables" as *;
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.25s ease-in-out;
+}
+
+.dialog-box {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text);
+  padding: 2rem;
+  border-radius: 1rem;
+  text-align: center;
+  width: auto;
+  max-width: 90vw;
+  position: relative;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  transform: scale(0.9);
+  animation: scaleUp 0.3s forwards;
+  backdrop-filter: blur(25px) brightness(1.2);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.3s ease;
+
+  &.success {
+    border-color: #4caf50;
+  }
+
+  &.error {
+    border-color: #f44336;
+  }
+
+  .close-btn {
+    position: absolute;
+    top: 0.01rem;
+    right: 0.6rem;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.2);
+    }
+  }
+
+  .icon {
+    font-size: 2.8rem;
+    margin-bottom: 1rem;
+
+    &.success {
+      color: #4caf50;
+    }
+
+    &.error {
+      color: #f44336;
+    }
+  }
+
+  p {
+    font-size: 1rem;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  .ok-btn {
+    padding: 0.7rem 1.4rem;
+    background: var(--accent);
+    border: none;
+    border-radius: 0.6rem;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+
+    &:hover {
+      background: var(--accent-dark);
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: scale(0.97);
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

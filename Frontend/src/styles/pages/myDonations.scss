@@ -1,0 +1,252 @@
+@use "../variables" as *;
+
+.my-donations-page {
+  min-height: 100vh;
+  padding: 2.5rem;
+  background: var(--bg);
+  color: var(--text);
+  font-family: $font-base;
+  transition: background 0.4s ease, color 0.4s ease;
+
+  h2 {
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 2.8rem;
+    color: var(--accent);
+    position: relative;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    &::after {
+      content: "";
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+      margin: 0.6rem auto 0;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.5);
+    }
+  }
+
+  .donation-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+    justify-items: center;
+    padding: 1rem 0;
+
+    .donation-card {
+      width: 100%;
+      max-width: 400px;
+      background: linear-gradient(
+        135deg,
+        rgba(var(--card-rgb), 0.9) 0%,
+        rgba(var(--card-rgb), 0.7) 100%
+      );
+      border-radius: 1.2rem;
+      overflow: hidden;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.15);
+      transition: all 0.4s ease;
+      position: relative;
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 1.8rem 2rem;
+      transform: translateY(0);
+      animation: cardFadeIn 0.6s ease both;
+
+      &:hover {
+        transform: translateY(-6px);
+        border: 1px solid rgba(var(--accent-rgb), 0.4);
+      }
+
+      .donation-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        position: relative;
+
+        h3 {
+          font-size: 1.35rem;
+          margin: 0;
+          color: var(--accent);
+          font-weight: 700;
+          text-transform: capitalize;
+          letter-spacing: 0.4px;
+        }
+
+        p {
+          margin: 0;
+          font-size: 0.95rem;
+          color: var(--text-light);
+          font-weight: 500;
+
+          strong {
+            color: var(--accent);
+            font-weight: 600;
+          }
+        }
+
+        .delete-btn {
+          margin-top: 1.2rem;
+          align-self: flex-start;
+          padding: 0.7rem 1.4rem;
+          background: linear-gradient(90deg, #ef4444, #dc2626);
+          color: #fff;
+          border: none;
+          border-radius: 0.6rem;
+          cursor: pointer;
+          font-weight: 600;
+          letter-spacing: 0.4px;
+          transition: all 0.3s ease;
+          box-shadow: 0 6px 15px rgba(239, 68, 68, 0.35);
+
+          &:hover {
+            background: linear-gradient(90deg, #dc2626, #b91c1c);
+            transform: translateY(-2px) scale(1.04);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.45);
+          }
+        }
+      }
+    }
+  }
+
+  .no-donations {
+    text-align: center;
+    font-size: 1.15rem;
+    color: var(--text-light);
+    margin-top: 3rem;
+    opacity: 0.85;
+  }
+
+  /* ================================
+     Responsive
+     ================================ */
+  @media (max-width: 1024px) {
+    padding: 2rem;
+
+    h2 {
+      font-size: 2.2rem;
+      margin-bottom: 2.2rem;
+    }
+
+    .donation-cards {
+      gap: 2rem;
+    }
+
+    .donation-card {
+      max-width: 350px;
+
+      .donation-info h3 {
+        font-size: 1.25rem;
+      }
+
+      .donation-info p {
+        font-size: 0.9rem;
+      }
+
+      .donation-info .delete-btn {
+        padding: 0.65rem 1.3rem;
+        font-size: 0.95rem;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    padding: 1.8rem;
+
+    h2 {
+      font-size: 2rem;
+    }
+
+    .donation-cards {
+      gap: 1.6rem;
+    }
+
+    .donation-card {
+      max-width: 100%;
+      padding: 1.5rem 1.8rem;
+
+      .donation-info h3 {
+        font-size: 1.15rem;
+      }
+
+      .donation-info p {
+        font-size: 0.88rem;
+      }
+
+      .donation-info .delete-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 1.2rem;
+
+    h2 {
+      font-size: 1.8rem;
+    }
+
+    .donation-cards {
+      gap: 1.2rem;
+    }
+
+    .donation-card {
+      padding: 1.2rem 1.5rem;
+
+      .donation-info h3 {
+        font-size: 1rem;
+      }
+
+      .donation-info p {
+        font-size: 0.85rem;
+      }
+
+      .donation-info .delete-btn {
+        padding: 0.55rem 1rem;
+        font-size: 0.85rem;
+      }
+    }
+  }
+}
+
+.loading-container {
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: var(--text);
+  font-family: $font-base;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(var(--accent-rgb), 0.2);
+  border-top: 5px solid var(--accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes cardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,331 @@
+@use "../variables" as *;
+
+.about-page {
+  font-family: $font-base;
+  color: var(--text);
+  transition: background 0.4s ease, color 0.4s ease;
+
+  /* ================================
+     Hero Section
+     ================================ */
+  .about-hero {
+    position: relative;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: #fff;
+    padding: 6rem 2rem 4rem;
+    text-align: center;
+    overflow: hidden;
+
+    .hero-content {
+      max-width: 700px;
+      margin: 0 auto;
+      animation: fadeInUp 1s ease forwards;
+
+      h1 {
+        font-size: 3rem;
+        color: #ff9090;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        line-height: 1.2;
+
+        span {
+          color: #ffffff;
+        }
+      }
+
+      p {
+        font-size: 1.15rem;
+        line-height: 1.6;
+        opacity: 0.95;
+      }
+    }
+
+    .hero-shapes {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      overflow: hidden;
+
+      .shape {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.15;
+        background: #fff;
+
+        &.shape1 {
+          width: 250px;
+          height: 250px;
+          top: -50px;
+          left: -50px;
+        }
+        &.shape2 {
+          width: 200px;
+          height: 200px;
+          bottom: -30px;
+          right: -30px;
+        }
+      }
+    }
+  }
+
+  /* ================================
+     Sections Styling
+     ================================ */
+  section {
+    padding: 3rem 2rem;
+    text-align: center;
+
+    h2 {
+      color: var(--accent);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 2rem;
+      position: relative;
+
+      &::after {
+        content: "";
+        display: block;
+        width: 60px;
+        height: 4px;
+        background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+        margin: 0.6rem auto 0;
+        border-radius: 10px;
+        box-shadow: 0 0 8px rgba(var(--accent-rgb), 0.5);
+      }
+    }
+
+    p {
+      font-size: 1rem;
+      color: var(--text-light);
+      max-width: 800px;
+      margin: 0 auto 2rem auto;
+      line-height: 1.6;
+    }
+  }
+
+  /* ================================
+     Values Grid
+     ================================ */
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 2rem;
+
+    .value-card {
+      background: rgba(var(--card-rgb));
+      backdrop-filter: blur(15px);
+      border-radius: 1rem;
+      padding: 2rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+      .icon {
+        font-size: 2.2rem;
+        color: var(--accent);
+        margin-bottom: 0.8rem;
+      }
+
+      h3 {
+        font-size: 1.25rem;
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        color: var(--text-light);
+        font-size: 0.95rem;
+      }
+
+      &:hover {
+        transform: translateY(-6px);
+      }
+    }
+  }
+
+  /* ================================
+     How It Works Grid
+     ================================ */
+  .about-how {
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+
+      .how-card {
+        background: rgba(var(--card-rgb));
+        backdrop-filter: blur(15px);
+        border-radius: 1rem;
+        padding: 2rem 1.5rem;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+        .icon {
+          font-size: 2rem;
+          color: var(--accent);
+          margin-bottom: 0.7rem;
+        }
+
+        h3 {
+          color: var(--accent);
+          font-size: 1.2rem;
+          margin-bottom: 0.5rem;
+        }
+
+        p {
+          color: var(--text-light);
+          font-size: 0.95rem;
+        }
+
+        &:hover {
+          transform: translateY(-6px);
+        }
+      }
+    }
+  }
+
+  /* ================================
+     Closing Note Section
+     ================================ */
+  .about-note {
+    padding: 2rem;
+
+    p {
+      max-width: 700px;
+      margin: 0 auto;
+      font-size: 1rem;
+      color: var(--text-light);
+      line-height: 1.6;
+      font-weight: 500;
+      opacity: 0.9;
+    }
+  }
+
+  /* ================================
+     Animations
+     ================================ */
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ================================
+     Responsive
+     ================================ */
+  @media (max-width: 1024px) {
+    .about-hero {
+      padding: 5rem 2rem 3rem;
+
+      .hero-content h1 {
+        font-size: 2.7rem;
+      }
+
+      .hero-content p {
+        font-size: 1.1rem;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    section {
+      padding: 2.5rem 1.5rem;
+    }
+
+    .about-hero {
+      padding: 4rem 1.5rem 2.5rem;
+
+      .hero-content h1 {
+        font-size: 2.2rem;
+      }
+
+      .hero-content p {
+        font-size: 1rem;
+      }
+    }
+
+    h2 {
+      font-size: 1.8rem;
+    }
+
+    p {
+      font-size: 0.95rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    section {
+      padding: 2rem 1rem;
+    }
+
+    .about-hero {
+      padding: 3rem 1rem 2rem;
+
+      .hero-content h1 {
+        font-size: 1.8rem;
+        line-height: 1.2;
+        margin-bottom: 0.6rem;
+        word-break: break-word;
+      }
+
+      .hero-content p {
+        font-size: 0.9rem;
+      }
+    }
+
+    h2 {
+      font-size: 1.6rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+    }
+
+    .values-grid, .about-how .how-grid {
+      gap: 1.5rem;
+    }
+  }
+}
+
+/* ================================
+   Vision Section
+   ================================ */
+.about-vision {
+  p {
+    font-size: 1rem;
+    color: var(--text-light);
+    max-width: 750px;
+    margin: 0 auto 2rem auto;
+    line-height: 1.6;
+  }
+}
+
+/* ================================
+   Dark Theme Card Fix
+   ================================ */
+[data-theme='dark'] {
+  .value-card,
+  .how-card {
+    background: var(--card-rgb);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  }
+
+  .value-card:hover,
+  .how-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35);
+  }
+
+  .value-card p,
+  .how-card p {
+    color: var(--text-light);
+  }
+}

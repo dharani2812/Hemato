@@ -1,0 +1,128 @@
+@use "../variables" as *;
+@use "../mixins" as *;
+
+.custom-dropdown {
+  position: relative;
+  width: 100%;
+  font-size: 1rem;
+  color: var(--text);
+  font-family: $font-base;
+  background: var(--bg);
+  border-radius: 10px;
+
+  // =========================
+  // Selected Item Box
+  // =========================
+  .dropdown-selected {
+    position: relative;
+    padding: 1rem 1.2rem;
+    border-radius: 14px;
+    border: 1.5px solid rgba(var(--accent-rgb), 0.6);
+    background: rgba(var(--card-bg-rgb), 0.4);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center; // ✅ centers selected blood group
+    text-align: center;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(12px);
+
+    span {
+      color: var(--text);
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      font-size: 1.05rem;
+    }
+
+    // Custom arrow icon
+    .arrow {
+      position: absolute; // ✅ arrow stays at right edge
+      right: 1.2rem;
+      font-size: 1.3rem;
+      color: var(--accent);
+      transition: transform 0.3s ease, color 0.3s ease;
+    }
+
+    &.open {
+      border-color: var(--accent-dark);
+      background: rgba(var(--accent-rgb), 0.15);
+      box-shadow: 0 0 10px rgba(var(--accent-rgb), 0.3);
+    }
+
+    &.open .arrow {
+      transform: rotate(180deg);
+    }
+
+  }
+
+  // =========================
+  // Dropdown Options
+  // =========================
+  .dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: rgba(var(--card-bg-rgb), 0.8);
+    backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(var(--accent-rgb), 0.4);
+    border-radius: 14px;
+    margin-top: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+    z-index: 25;
+    animation: fadeIn 0.25s ease;
+
+    li {
+      padding: 1rem 0;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-align: center;
+      color: var(--text);
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      font-size: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &:hover {
+        background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+        color: #fff;
+        transform: scale(1.05);
+      }
+
+      &:not(:last-child) {
+        border-bottom: 1px solid rgba(var(--accent-rgb), 0.1);
+      }
+    }
+  }
+
+  // =========================
+  // Fade-in Animation
+  // =========================
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  // =========================
+  // Responsive
+  // =========================
+  @include respond-to(tablet) {
+    .dropdown-selected {
+      padding: 0.9rem 1rem;
+      font-size: 0.95rem;
+    }
+
+    .dropdown-options li {
+      padding: 0.85rem 0;
+    }
+  }
+}
