@@ -6,7 +6,7 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase/config.js";
 import Dialog from "../components/Dialog";
 import "../styles/pages/login.scss";
@@ -14,52 +14,39 @@ import "../styles/pages/login.scss";
 const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [dialog, setDialog] = useState({ show: false, message: "", type: "" });
-  const [loading, setLoading] = useState(false); // ✅ Add loading state
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // ----------------------------
+  // Handle input changes
+  // ----------------------------
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const showError = (error) => {
-    let message = "";
-    switch (error.code) {
-      case "auth/user-not-found":
-        message = "User not found. Please register first.";
-        break;
-      case "auth/wrong-password":
-        message = "Incorrect password. Try again.";
-        break;
-      case "auth/invalid-email":
-        message = "Invalid email address format.";
-        break;
-      case "auth/too-many-requests":
-        message = "Too many attempts. Please try again later.";
-        break;
-      case "auth/popup-closed-by-user":
-        message = "Google login was cancelled. Try again.";
-        break;
-      case "auth/credential-already-in-use":
-        message = "This Google account is already linked with another user.";
-        break;
-      case "auth/invalid-credential":
-        message = "Unable to login with Google. Please try again.";
-        break;
-      default:
-        message = "Something went wrong. Please try again.";
-    }
-    setDialog({
-      show: true,
-      message: message + ` (Error: ${error.code})`,
-      type: "error",
-    });
-  };
+  // ----------------------------
+  // Centralized error handler
+  // ----------------------------
+ const showError = (error, method = "email") => {
+  setDialog({
+    show: true,
+    message: "Please Enter valid email and password.",
+    type: "info",
+  });
 
+  // Optional: still log the actual error for debugging
+  console.error("Login error:", error.code, error.message);
+};
+
+
+  // ----------------------------
+  // Email/password login
+  // ----------------------------
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (loading) return; // ✅ Prevent double-click
+    if (loading) return;
 
-    setLoading(true); // ✅ Disable button
+    setLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -68,23 +55,24 @@ const Login = () => {
       );
       const user = userCredential.user;
 
+      // Check email verification
       if (!user.emailVerified) {
         await signOut(auth);
-       setDialog({
-  show: true,
-  message: `ℹ️ Please verify your email.
+        setDialog({
+          show: true,
+          message: `Please verify your email before logging in. 
 Check your inbox for the verification link. 
-If you don't see it, kindly check your Spam or Promotions folder.`,
-  type: "info",
-});
-
+If you don’t see it, check your Spam or Promotions folder.`,
+          type: "info",
+        });
         setLoading(false);
         return;
       }
 
+      // Successful login
       setDialog({
         show: true,
-        message: "✅ Logged in successfully!",
+        message: "You’ve successfully logged in!",
         type: "success",
       });
       setFormData({ email: "", password: "" });
@@ -94,64 +82,79 @@ If you don't see it, kindly check your Spam or Promotions folder.`,
         navigate("/");
       }, 1500);
     } catch (error) {
-      showError(error);
-    } finally {
-      setLoading(false); // ✅ Re-enable after backend finishes
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    if (loading) return;
-    setLoading(true);
-    const provider = new GoogleAuthProvider();
-    try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      if (!user.emailVerified) {
-        await signOut(auth);
-        setDialog({
-          show: true,
-          message:
-            "⚠️ Your Google account email is not verified. Please verify your email first.",
-          type: "error",
-        });
-        setLoading(false);
-        return;
-      }
-
-      const userDoc = doc(db, "users", user.uid);
-      const docSnap = await getDoc(userDoc);
-      if (!docSnap.exists()) {
-        await setDoc(userDoc, {
-          name: user.displayName,
-          email: user.email,
-          verified: user.emailVerified,
-          provider: "google",
-          createdAt: new Date(),
-        });
-      }
-
-      setDialog({
-        show: true,
-        message: "✅ Logged in with Google successfully!",
-        type: "success",
-      });
-      setTimeout(() => {
-        setDialog({ show: false, message: "", type: "" });
-        navigate("/");
-      }, 1500);
-    } catch (error) {
-      showError(error);
+      showError(error, "email");
     } finally {
       setLoading(false);
     }
   };
 
+  // ----------------------------
+  // Google login
+  // ----------------------------
+  const handleGoogleLogin = async () => {
+    if (loading) return;
+    setLoading(true);
+    const provider = new GoogleAuthProvider();
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Email verification check
+      if (!user.emailVerified) {
+        await signOut(auth);
+        setDialog({
+          show: true,
+          message: `Please verify your email before logging in. 
+Check your inbox for the verification link. 
+If you don’t see it, check your Spam or Promotions folder.`,
+          type: "info",
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Check if user exists in Firestore
+      const userDoc = doc(db, "users", user.uid);
+      const docSnap = await getDoc(userDoc);
+
+      if (!docSnap.exists()) {
+        await signOut(auth);
+        setDialog({
+          show: true,
+          message: "No account found with this email. Please register first.",
+          type: "info",
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Successful Google login
+      setDialog({
+        show: true,
+        message: "You’ve successfully signed in with Google!",
+        type: "success",
+      });
+
+      setTimeout(() => {
+        setDialog({ show: false, message: "", type: "" });
+        navigate("/");
+      }, 1500);
+    } catch (error) {
+      showError(error, "google");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ----------------------------
+  // Render
+  // ----------------------------
   return (
     <div className="auth-page">
       <div className="auth-card">
         <h2>Welcome Back</h2>
+
         <form onSubmit={handleLogin}>
           <input
             type="email"
@@ -160,7 +163,7 @@ If you don't see it, kindly check your Spam or Promotions folder.`,
             value={formData.email}
             onChange={handleChange}
             required
-            disabled={loading} // ✅ Disable input when loading
+            disabled={loading}
           />
           <input
             type="password"
@@ -200,6 +203,7 @@ If you don't see it, kindly check your Spam or Promotions folder.`,
         </p>
       </div>
 
+      {/* Dialog component */}
       {dialog.show && (
         <Dialog
           message={dialog.message}
