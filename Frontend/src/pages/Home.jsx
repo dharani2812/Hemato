@@ -1,10 +1,11 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef, useState } from "react";
 import "../styles/pages/home.scss";
 
 import Lottie from "lottie-react";
 import HeroAnimation from "../assets/heroAnimation.json";
-import Donate from "../pages/Donate";
 import { useNavigate } from "react-router-dom";
+import { getAuth } from "firebase/auth";
+import Dialog from "../components/Dialog"; // ✅ import Dialog
 
 const featuresData = [
   {
@@ -62,10 +63,28 @@ const stepsData = [
 
 const Home = () => {
   const navigate = useNavigate();
+  const auth = getAuth();
+
+  const [showDialog, setShowDialog] = useState(false); // dialog state
 
   const featureRef = useRef(null);
   const stepsRef = useRef(null);
   const factsRef = useRef(null);
+
+  // ✅ Handle Donate Now button click
+  const handleDonateClick = () => {
+    if (!auth.currentUser) {
+      setShowDialog(true); // show dialog if not logged in
+    } else {
+      navigate("/add-donor"); // navigate if logged in
+    }
+  };
+
+  // ✅ Close dialog and redirect to login
+  const handleDialogClose = () => {
+    setShowDialog(false);
+    navigate("/login");
+  };
 
   return (
     <div className="home">
@@ -77,10 +96,7 @@ const Home = () => {
           </h1>
           <p>Connect with verified donors and make a difference today.</p>
           <div className="hero__buttons">
-            <button
-              className="btn btn-primary"
-              onClick={() => navigate("/add-donor")}
-            >
+            <button className="btn btn-primary" onClick={handleDonateClick}>
               Donate Now
             </button>
             <button
@@ -137,6 +153,14 @@ const Home = () => {
         </div>
       </section>
 
+      {/* ✅ Dialog for Donate Now if not logged in */}
+      {showDialog && (
+        <Dialog
+          message="To donate, please login first."
+          type="info"
+          onClose={handleDialogClose}
+        />
+      )}
     </div>
   );
 };

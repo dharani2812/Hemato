@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; // ✅ use navigate
 import { collection, getDocs } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import { db } from "../../firebase/config.js";
 import Dialog from "../components/Dialog";
 import RequestFormDialog from "../components/RequestFormDialog.jsx";
@@ -14,7 +16,20 @@ const Donors = () => {
   const [dialog, setDialog] = useState({ show: false, message: "", type: "" });
   const [selectedDonor, setSelectedDonor] = useState(null);
 
+  const auth = getAuth();
+  const navigate = useNavigate();
+
+  // ✅ Check login on page load
   useEffect(() => {
+    if (!auth.currentUser) {
+      setDialog({
+        show: true,
+        message: "To see donors, please login first.",
+        type: "info",
+      });
+      return;
+    }
+
     const fetchDonors = async () => {
       try {
         const donorsCol = collection(db, "donors");
@@ -32,8 +47,9 @@ const Donors = () => {
         setLoading(false);
       }
     };
+
     fetchDonors();
-  }, []);
+  }, [auth.currentUser]);
 
   const showDialog = (message, type = "success") => {
     setDialog({ show: true, message, type });
@@ -51,6 +67,27 @@ const Donors = () => {
     );
     setFilteredDonors(filtered);
   }, [searchTerm, donors]);
+
+  // ✅ Close dialog and redirect to login
+  const handleDialogClose = () => {
+    setDialog({ show: false, message: "", type: "" });
+    navigate("/login");
+  };
+
+  // If user is not logged in, don’t show the donors list
+  if (!auth.currentUser) {
+    return (
+      <>
+        {dialog.show && (
+          <Dialog
+            message={dialog.message}
+            type={dialog.type}
+            onClose={handleDialogClose}
+          />
+        )}
+      </>
+    );
+  }
 
   return (
     <>

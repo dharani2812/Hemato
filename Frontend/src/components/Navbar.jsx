@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { FaTint, FaBars, FaTimes } from "react-icons/fa";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import ThemeToggle from "../styles/components/ThemeToggle";
 import { auth } from "../../firebase/config.js";
+import Dialog from "../components/Dialog"; // ✅ import Dialog
 import "../styles/components/Navbar.scss";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [showDialog, setShowDialog] = useState(false); // dialog state
   const navigate = useNavigate();
 
   // Toggle Menu
@@ -35,6 +37,23 @@ const Navbar = () => {
     }
   };
 
+  // ✅ Handle Add Donor click
+  const handleAddDonorClick = (e) => {
+    e.preventDefault();
+    if (!user) {
+      setShowDialog(true); // show dialog if not logged in
+    } else {
+      navigate("/add-donor"); // navigate normally if logged in
+    }
+    setMenuOpen(false); // close mobile menu
+  };
+
+  // ✅ Close dialog and redirect to login
+  const handleDialogClose = () => {
+    setShowDialog(false);
+    navigate("/login");
+  };
+
   return (
     <nav className="navbar">
       {/* Logo */}
@@ -51,21 +70,19 @@ const Navbar = () => {
         <NavLink to="/donors" onClick={handleLinkClick}>
           Donors
         </NavLink>
-        <NavLink to="/add-donor" onClick={handleLinkClick}>
+        <NavLink to="/add-donor" onClick={handleAddDonorClick}>
           Add Donor
         </NavLink>
         <NavLink to="/about" onClick={handleLinkClick}>
           About
         </NavLink>
 
-        {/* My Donations link visible only to logged-in users */}
         {user && (
           <NavLink to="/my-donations" onClick={handleLinkClick}>
             My Donations
           </NavLink>
         )}
 
-        {/* Login / Logout Link */}
         {user && user.emailVerified ? (
           <button className="logout-btn" onClick={handleLogout}>
             Logout
@@ -88,6 +105,15 @@ const Navbar = () => {
           {menuOpen ? <FaTimes /> : <FaBars />}
         </button>
       </div>
+
+      {/* ✅ Dialog for Add Donor if not logged in */}
+      {showDialog && (
+        <Dialog
+          message="To add a donor, please login first."
+          type="info"
+          onClose={handleDialogClose}
+        />
+      )}
     </nav>
   );
 };
