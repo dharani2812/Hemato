@@ -70,12 +70,14 @@ const Login = () => {
 
       if (!user.emailVerified) {
         await signOut(auth);
-        setDialog({
-          show: true,
-          message:
-            "⚠️ Please verify your email before logging in.\nCheck your inbox for the verification link.",
-          type: "error",
-        });
+       setDialog({
+  show: true,
+  message: `ℹ️ Please verify your email.
+Check your inbox for the verification link. 
+If you don't see it, kindly check your Spam or Promotions folder.`,
+  type: "info",
+});
+
         setLoading(false);
         return;
       }

@@ -159,7 +159,6 @@ const Donors = () => {
             )}
           </div>
 
-          <Footer />
         </>
       )}
     </>
