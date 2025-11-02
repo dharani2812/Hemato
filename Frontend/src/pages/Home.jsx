@@ -43,7 +43,7 @@ const factsData = [
   },
   {
     id: 3,
-    number: "O+ in demand",
+    number: "O- in demand",
     description: "Most common blood type needed in emergencies.",
     icon: "🩸",
   },
